@@ -1,0 +1,95 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  namespace: zeebe
+  labels:
+    app: elasticsearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      terminationGracePeriodSeconds: 300
+      initContainers:
+      - name: increase-the-vm-max-map-count
+        image: busybox
+        command:
+        - sysctl
+        - -w
+        - vm.max_map_count=262144
+        securityContext:
+          privileged: true
+      - name: increase-the-ulimit
+        image: busybox
+        command:
+        - sh
+        - -c
+        - ulimit -n 65536
+        securityContext:
+          privileged: true
+      - name: fix-permissions
+        image: busybox
+        command:
+        - sh
+        - -c
+        - chown -R 1000:1000 /usr/share/elasticsearch/data
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      containers:
+      - name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.7.0
+        env:
+        - name: discovery.type
+          value: single-node
+        - name: cluster.name
+          value: elasticsearch-cluster
+        - name: node.name
+          value: elasticsearch
+        - name: ES_JAVA_OPTS
+          value: "-Xms512m -Xmx512m"
+        resources:
+          requests:
+            cpu: 10m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        securityContext:
+          privileged: true
+          runAsUser: 1000
+          capabilities:
+            add:
+            - IPC_LOCK
+            - SYS_RESOURCE
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+        livenessProbe:
+          tcpSocket:
+            port: transport
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /_cluster/health
+            port: http
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-elasticsearch

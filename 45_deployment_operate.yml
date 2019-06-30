@@ -1,0 +1,40 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: operate
+  namespace: zeebe
+  labels:
+    app: operate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: operate
+  template:
+    metadata:
+      labels:
+        app: operate
+    spec:
+      containers:
+      - name: operate
+        image: camunda/operate:1.0.0-alpha11
+        resources:
+          requests:
+            cpu: 10m
+            memory: 256Mi
+          limits:
+            cpu: 100m
+            memory: 512Mi
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /usr/local/operate/config/application.yml
+          subPath: application.yml
+      volumes:
+      - name: config
+        configMap:
+          name: operate-config
+          defaultMode: 0744

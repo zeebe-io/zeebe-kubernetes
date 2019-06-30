@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zeebe
+  namespace: zeebe
+spec:
+  selector:
+    matchLabels:
+      app: zeebe
+  serviceName: zeebe
+  replicas: 3
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        app: zeebe
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: zeebe
+        image: camunda/zeebe:0.19.0-alpha3
+        env:
+        - name: ZEEBE_LOG_LEVEL
+          value: debug
+        - name: ZEEBE_PARTITIONS_COUNT
+          value: "3"
+        - name: ZEEBE_CLUSTER_SIZE
+          value: "3"
+        - name: ZEEBE_REPLICATION_FACTOR
+          value: "3"
+        - name: JAVA_TOOL_OPTIONS
+          value: |
+            -XX:+UnlockExperimentalVMOptions
+            -XX:+UseCGroupMemoryLimitForHeap
+            -Xms1024m
+            -Xmx1024m
+        ports:
+        - containerPort: 26500
+          name: gateway
+        - containerPort: 26501
+          name: command
+        - containerPort: 26502
+          name: internal
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
+          limits:
+            cpu: 300m
+            memory: 2Gi
+        volumeMounts:
+        - name: config
+          mountPath: /usr/local/zeebe/conf/zeebe.cfg.toml
+          subPath: zeebe.cfg.toml
+        - name: config
+          mountPath: /usr/local/bin/startup.sh
+          subPath: startup.sh
+        - name: data
+          mountPath: /usr/local/zeebe/data
+      volumes:
+      - name: config
+        configMap:
+          name: zeebe-config
+          defaultMode: 0744
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: zeebe-regional
+      resources:
+        requests:
+          storage: 5Gi

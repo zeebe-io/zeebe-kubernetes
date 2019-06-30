@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeebe
+  namespace: zeebe
+  labels:
+    app: zeebe
+spec:
+  clusterIP: None # <--
+  ports:
+  - port: 26500
+    name: gateway
+  - port: 26501
+    name: command
+  - port: 26502
+    name: internal
+  selector:
+    app: zeebe

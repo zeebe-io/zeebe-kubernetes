@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: operate
+  namespace: zeebe
+  labels:
+    app: operate
+spec:
+  clusterIP: None # <--
+  ports:
+  - port: 8080
+    name: http
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: operate
