@@ -9,10 +9,13 @@ spec:
   clusterIP: None # <--
   ports:
   - port: 26500
+    protocol: TCP
     name: gateway
   - port: 26501
+    protocol: TCP
     name: command
   - port: 26502
+    protocol: TCP
     name: internal
   selector:
     app: zeebe

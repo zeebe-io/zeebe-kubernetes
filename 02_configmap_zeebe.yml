@@ -10,7 +10,9 @@ data:
     configFile=/usr/local/zeebe/conf/zeebe.cfg.toml
     export ZEEBE_HOST=$(hostname -f)
     export ZEEBE_NODE_ID="${HOSTNAME##*-}"
-    export ZEEBE_CONTACT_POINTS=zeebe-0.$(hostname -d):26502
+    # We need to specify all brokers as contact points for partition healing to work correctly
+    # https://github.com/zeebe-io/zeebe/issues/2684
+    export ZEEBE_CONTACT_POINTS=zeebe-0.$(hostname -d):26502,zeebe-1.$(hostname -d):26502,zeebe-2.$(hostname -d):26502
     #if [ "${HOSTNAME##*-}" -ne "0" ]; then
     #  export ZEEBE_CONTACT_POINTS="zeebe-0.zeebe":26502
     #fi
@@ -90,14 +92,11 @@ data:
     # managementThreads = 1
 
     [network]
-
     # This section contains the network configuration. Particularly, it allows to
-    # configure the hosts and ports the broker should bind to. the broker exposes 3
-    # ports: 1. client: the port on which client (Java, CLI, Go, ...) connections
-    # are handled 2. management: used internally by the cluster for the gossip
-    # membership protocol and other management interactions 3. replication: used
-    # internally by the cluster for replicating data across nodes using the raft
-    # protocol
+    # configure the hosts and ports the broker should bind to. The broker exposes two sockets:
+    # 1. command: the socket which is used for gateway-to-broker communication
+    # 2. internal: the socket which is used for broker-to-broker communication
+    # 3. monitoring: the socket which is used to monitor the broker
 
     # Controls the default host the broker should bind to. Can be overwritten on a
     # per binding basis for client, management and replication
@@ -115,68 +114,29 @@ data:
     # This setting can also be overridden using the environment variable ZEEBE_PORT_OFFSET.
     # portOffset = 0
 
-    # Controls the default size of the buffers that are used for buffering outgoing
-    # messages. Can be overwritten on a per binding basis for client, management and
-    # replication
-    # defaultSendBufferSize = "16M"
-
-    [network.client]
-
-    # Allows to override the host the client api binds to
+    [network.commandApi]
+    # Overrides the host used for gateway-to-broker communication
     # host = "localhost"
-    #
-    # The port the client api binds to
+
+    # Sets the port used for gateway-to-broker communication
     # port = 26501
-    #
-    # Overrides the size of the buffer used for buffering outgoing messages to
-    # clients
+
+    # Sets the size of the buffer used for buffering outgoing messages
     # sendBufferSize = "16M"
-    #
-    # Sets the size of the buffer used for receiving control messages from clients
-    # (such as management of subscriptions)
-    # controlMessageBufferSize = "8M"
 
-    [network.management]
-
-    # Overrides the host the management api binds to
+    [network.internalApi]
+    # Overrides the host used for internal broker-to-broker communication
     # host = "localhost"
-    #
-    # Sets the port the management api binds to
+
+    # Sets the port used for internal broker-to-broker communication
     # port = 26502
-    #
-    # Overrides the size of the buffer to be used for buffering outgoing messages to
-    # other brokers through the management protocols
-    # sendBufferSize = "16M"
-    #
-    # Sets the buffer size used for receiving gossip messages and others
-    # receiveBufferSize = "8M"
 
-    [network.replication]
-
-    # Overrides the host the replication api binds to
+    [network.monitoringApi]
+    # Overrides the host used for exposing monitoring information
     # host = "localhost"
-    #
-    # Sets the port the replication api binds to
-    # port = 26503
-    #
-    # Sets the buffer size used for buffering outgoing raft (replication) messages
-    # sendBufferSize = "16M"
 
-    [network.subscription]
-
-    # Overrides the host the subscription api binds to
-    # host = "localhost"
-    #
-    # Sets the port the subscription api binds to
-    # port = 26504
-    #
-    # Overrides the size of the buffer to be used for buffering outgoing messages to
-    # other brokers through the subscription protocols
-    # sendBufferSize = "16M"
-    #
-    # Sets the buffer size used for receiving subscription messages and others
-    # receiveBufferSize = "8M"
-
+    # Sets the port used for exposing monitoring information
+    # port = 9600
 
     [data]
 
