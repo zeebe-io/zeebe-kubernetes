@@ -12,4 +12,4 @@ Pull Requests are welcome!
 
 ## Getting Help
 
-The Zeebe forum and the Zeebe Slack are the best place to ask about Zeebe.
+The [Zeebe forum](https://forum.zeebe.io/) and the [Zeebe Slack](https://zeebe-slack-invite.herokuapp.com/) are the best place to ask about Zeebe.
