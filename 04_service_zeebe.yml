@@ -6,7 +6,8 @@ metadata:
   labels:
     app: zeebe
 spec:
-  clusterIP: None # <--
+  clusterIP: None
+  publishNotReadyAddresses: true
   ports:
   - port: 26500
     protocol: TCP
