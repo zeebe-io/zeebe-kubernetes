@@ -7,7 +7,7 @@ $KUBECTL 02_configmap_zeebe.yml
 $KUBECTL 03_storageclass_zeebe-gcp.yml
 $KUBECTL 04_service_zeebe.yml
 $KUBECTL 10_statefulset_zeebe.yml
-$KUBECTL 20_storageclass_elasticsearch-gcp.yaml
+$KUBECTL 20_storageclass_elasticsearch-gcp.yml
 $KUBECTL 21_persistentvolumeclaim_elasticsearch.yml
 $KUBECTL 22_service_elasticsearch.yml
 $KUBECTL 25_deployment_elasticsearch.yml
