@@ -22,12 +22,7 @@ data:
     
     exec /usr/local/zeebe/bin/broker
   zeebe.cfg.toml: |
-    # Zeebe broker configuration file
-
-    # Overview -------------------------------------------
-
-    # This file contains a complete list of available configuration options.
-
+  
     # Default values:
     #
     # When the default value is used for a configuration option, the option is
@@ -51,8 +46,6 @@ data:
     # Paths:
     # Relative paths are resolved relative to the installation directory of the
     # broker.
-
-    # ----------------------------------------------------
 
 
     [gateway]
