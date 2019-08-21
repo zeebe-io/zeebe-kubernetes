@@ -21,6 +21,10 @@ spec:
         env:
         - name: ELASTICSEARCH_URL
           value: http://elasticsearch.zeebe:9200
+        - name: SERVER_BASEPATH
+          value: /logs
+        - name: SERVER_REWRITEBASEPATH
+          value: "true"  
         resources:
           requests:
             cpu: 500m
