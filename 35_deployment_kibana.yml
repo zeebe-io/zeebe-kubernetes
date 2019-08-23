@@ -23,11 +23,11 @@ spec:
           value: http://elasticsearch.zeebe:9200
         resources:
           requests:
-            cpu: 10m
-            memory: 256Mi
-          limits:
-            cpu: 200m
+            cpu: 500m
             memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 768Mi
         ports:
         - containerPort: 5601
           name: http

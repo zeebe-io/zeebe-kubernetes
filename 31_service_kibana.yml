@@ -6,7 +6,6 @@ metadata:
   labels:
     app: kibana
 spec:
-  clusterIP: None # <--
   ports:
   - port: 80
     name: http

@@ -6,7 +6,6 @@ metadata:
   labels:
     app: operate
 spec:
-  clusterIP: None # <--
   ports:
   - port: 80
     name: http
