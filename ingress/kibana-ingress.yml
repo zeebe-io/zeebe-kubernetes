@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class:               nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"    
+  name: zeebe-kibana-ingress 
+spec:
+  rules:
+  - http:
+      paths:
+        - backend:
+            serviceName: kibana 
+            servicePort: 80 
+          path: /logs
