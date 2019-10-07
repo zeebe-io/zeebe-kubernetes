@@ -12,6 +12,10 @@ Persistent storage configuration is provided for Azure and Google Cloud Platform
 
 Pull Requests are welcome!
 
+## Operate
+
+http://localhost/#/login  demo / demo
+
 ## Getting Help
 
 The [Zeebe forum](https://forum.zeebe.io/) and the [Zeebe Slack](https://zeebe-slack-invite.herokuapp.com/) are the best place to ask about Zeebe.
