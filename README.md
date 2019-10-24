@@ -1,5 +1,8 @@
 # Zeebe Kubernetes
 
+** NOTE: This repository is now archived in favour of [Zeebe HELM Charts](http://helm.zeebe.io). We recommend to use our Official Helm Charts. You can find documentation about how to install these charts in [our official docs](https://stage.docs.zeebe.io/kubernetes/README.html)  **
+
+
 This repository contains Kubernetes manifests to give you a starting point for creating your own Kubernetes deployment of Zeebe. There are many approaches you can take, and tools that you can use to manage Kubernetes. These files use `kubectl` only, to remain agnostic to configuration and deployment tools.
 
 These configurations are based on [Per Arne Tollefson's Zeebe Kubernetes Deployment](https://github.com/perarnetol/zeebe-kubernetes-deployment), with additional contributions from the community.
